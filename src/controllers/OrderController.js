@@ -20,7 +20,7 @@ const FindAllOrder = async (req, res) => {
 const FindOneOrder = async (req, res) => {
   try {
     const { id } = req.params;
-    const order = await Order.FindByPk(id);
+    const order = await Order.findByPk(id);
 
     if (!order) {
       return res.status(404).send({
@@ -45,41 +45,13 @@ const FindOneOrder = async (req, res) => {
 };
 const CreateOrder = async (req, res) => {
   try {
-    const { order_weight, order_status, order_date } = req.body;
-
-    const user = await User.findOne({
-      order: [["createdAt", "DESC"]],
-    });
-
-    const existingUserOrder = await Order.findOne({
-      where: {
-        user_id: user.user_id,
-      },
-    });
-
-    const service = await Service.findOne({
-      order: [["createdAt", "DESC"]],
-    });
-
-    const existingServiceOrder = await Order.findOne({
-      where: {
-        service_id: service.service_id,
-      },
-    });
-
-    if (existingUserOrder || existingServiceOrder) {
-      return res.status(400).send({
-        status: 400,
-        message: "An order with the same user or service already exists",
-      });
-    }
+    const { user_id, order_weight, order_status, service_id } = req.body;
 
     const order = await Order.create({
-      user_id: user.user_id,
-      service_id: service.service_id,
+      user_id,
+      service_id,
       order_weight,
       order_status,
-      order_date,
     });
 
     return res.status(201).send({
@@ -99,7 +71,8 @@ const CreateOrder = async (req, res) => {
 const UpdateOrder = async (req, res) => {
   try {
     const { id } = req.params;
-    const { order_weight, order_status, order_date } = req.body;
+    const { user_id, service_id, order_weight, order_status, order_date } =
+      req.body;
 
     const order = await Order.findByPk(id);
 
@@ -107,6 +80,20 @@ const UpdateOrder = async (req, res) => {
       return res.status(404).send({
         status: 404,
         message: "Data Not Found",
+        data: null,
+      });
+    }
+
+    if (
+      !user_id ||
+      !service_id ||
+      !order_weight ||
+      !order_date ||
+      !order_status
+    ) {
+      return res.status(400).send({
+        status: 400,
+        message: "Missing required fields in request body",
         data: null,
       });
     }
