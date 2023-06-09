@@ -4,10 +4,17 @@ const PasswordHelper = require("../helpers/PasswordHelper");
 
 const SignUp = async (req, res) => {
   try {
-    const { name, username, email, password, confirm_password, phone } =
-      req.body;
+    const {
+      name,
+      username,
+      email,
+      password,
+      confirm_password,
+      phone,
+      role_id,
+    } = req.body;
 
-    const defaultRoleId = 3 || role_id;
+    const defaultRoleId = role_id || 3;
 
     const passwordHashed = await PasswordHelper.PasswordHashing(password);
 
@@ -114,12 +121,19 @@ const SignIn = async (req, res) => {
 
 const FindAllUser = async (req, res) => {
   try {
-    const user = await User.findAll();
+    const users = await User.findAll();
+
+    const modifiedUsers = users.map(({ accessToken, ...user }) => {
+      return {
+        ...user.dataValues,
+        accessToken: null,
+      };
+    });
 
     return res.status(200).send({
       status: 200,
       message: "OK",
-      data: user,
+      data: modifiedUsers,
     });
   } catch (err) {
     return res.status(500).send({
@@ -161,8 +175,9 @@ const FindOneUser = async (req, res) => {
 const UpdateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { role_id, username, email, password, phone } = req.body;
-    const defaultRoleId = 1;
+    const { name, username, email, password, phone, role_id } = req.body;
+    const defaultRoleId = 3;
+    const passwordHashed = await PasswordHelper.PasswordHashing(password);
 
     const user = await User.findByPk(id);
 
@@ -174,18 +189,29 @@ const UpdateUser = async (req, res) => {
       });
     }
 
+    if (!name || !username || !email || !password || !phone) {
+      return res.status(400).send({
+        status: 400,
+        message: "Missing required fields in request body",
+        data: null,
+      });
+    }
+
     user.role_id = role_id || defaultRoleId;
     user.username = username;
     user.email = email;
-    user.password = password;
+    user.password = passwordHashed;
     user.phone = phone;
 
     await user.save();
 
+    const modifiedUser = { ...user.dataValues };
+    delete modifiedUser.accessToken;
+
     return res.status(200).send({
       status: 200,
       message: "Update Successfully",
-      data: user,
+      data: modifiedUser,
     });
   } catch (err) {
     return res.status(500).send({
@@ -200,6 +226,7 @@ const PatchUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { role_id, username, email, password, phone } = req.body;
+    const passwordHashed = await PasswordHelper.PasswordHashing(password);
 
     const user = await User.findByPk(id);
 
@@ -224,7 +251,7 @@ const PatchUser = async (req, res) => {
     }
 
     if (password) {
-      user.password = password;
+      user.password = passwordHashed;
     }
 
     if (phone) {
