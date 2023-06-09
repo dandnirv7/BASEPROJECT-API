@@ -1,4 +1,5 @@
 const { Role } = require("../models");
+const role = require("../models/role");
 
 const FindAllRole = async (req, res) => {
   try {
@@ -87,7 +88,15 @@ const UpdateRole = async (req, res) => {
       });
     }
 
-    role.role_name = role_name || role.name;
+    if (!role_name) {
+      return res.status(400).send({
+        status: 400,
+        message: "Missing required fields in request body",
+        data: null,
+      });
+    }
+
+    role.role_name = role_name;
 
     await role.save();
 
@@ -155,7 +164,7 @@ const DeleteRole = async (req, res) => {
 
     return res.status(200).send({
       status: 200,
-      message: "Delete Successfully",
+      message: "Data has been deleted",
       data: null,
     });
   } catch (err) {
