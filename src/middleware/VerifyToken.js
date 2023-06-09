@@ -1,11 +1,10 @@
 const TokenHelper = require("../helpers/TokenHelper");
-
 const VerifyToken = (req, res, next) => {
   try {
     const authToken = req.headers["authorization"];
     const token = authToken && authToken.split(" ")[1];
 
-    if (token === null) {
+    if (!token) {
       return res.status(401).send({
         status: 401,
         message: "Unauthorized",
@@ -20,12 +19,14 @@ const VerifyToken = (req, res, next) => {
       });
     }
 
-    res.locals.role_id = result?.role_id;
+    res.locals.role_id = result.role_id;
+    res.locals.user_id = result.user_id;
+
     next();
   } catch (err) {
-    return res.send(500).send({
+    return res.status(500).send({
       status: 500,
-      message: err.message || "",
+      message: err.message || "Internal server error",
       errors: err,
     });
   }
@@ -73,9 +74,10 @@ const Admin = (req, res, next) => {
     });
   }
 };
-const BasicUser = (req, res, next) => {
+const BasicUser = async (req, res, next) => {
   try {
     const role_id = res.locals.role_id;
+    const user_id = res.locals.user_id;
 
     if (role_id !== 3) {
       return res.status(403).send({
