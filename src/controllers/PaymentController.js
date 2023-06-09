@@ -90,7 +90,7 @@ const CreatePayment = async (req, res) => {
 const UpdatePayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { payment_method, payment_amount, payment_date } = req.body;
+    const { order_id, payment_method, payment_amount, payment_date } = req.body;
 
     const payment = await Payment.findByPk(id);
 
@@ -98,6 +98,14 @@ const UpdatePayment = async (req, res) => {
       return res.status(404).send({
         status: 404,
         message: "Data Not Found",
+        data: null,
+      });
+    }
+
+    if (!order_id || !payment_method || !payment_amount || !payment_date) {
+      return res.status(400).send({
+        status: 400,
+        message: "Missing required fields in request body",
         data: null,
       });
     }
