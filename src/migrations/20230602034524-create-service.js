@@ -12,11 +12,14 @@ module.exports = {
       service_name: {
         type: Sequelize.STRING,
       },
+      service_type: {
+        type: Sequelize.STRING,
+      },
       service_price: {
         type: Sequelize.INTEGER,
       },
       estimated_service_time: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

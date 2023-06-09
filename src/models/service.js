@@ -18,8 +18,9 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
       },
       service_name: DataTypes.STRING,
+      service_type: DataTypes.STRING,
       service_price: DataTypes.INTEGER,
-      estimated_service_time: DataTypes.DATEONLY,
+      estimated_service_time: DataTypes.STRING,
     },
     {
       sequelize,

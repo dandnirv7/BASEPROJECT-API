@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "user",
       });
       Order.belongsTo(models.Service, {
-        foreignKey: "Order_id",
+        foreignKey: "service_id",
         as: "service",
       });
       Order.hasOne(models.Payment, {
@@ -47,7 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         values: ["Tertunda", "Dalam Pengerjaan", "Selesai"],
         defaultValue: "Tertunda",
       },
-      order_date: DataTypes.DATE,
+      order_date: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       sequelize,

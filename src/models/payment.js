@@ -30,7 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         values: ["Tunai", "Kartu Kredit", "Bank Transfer"],
       },
       payment_amount: DataTypes.INTEGER,
-      payment_date: DataTypes.DATE,
+      payment_date: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       sequelize,
