@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
           try {
             await AuditLog.create({
               table_name: "Roles",
-              task: "Role insert",
+              task: "insert",
               description: `Insert process with data ${JSON.stringify(role)}`,
             });
           } catch (error) {
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
           try {
             await AuditLog.create({
               table_name: "Roles",
-              task: "Role updated",
+              task: "updated",
               description: `Update process with data ${JSON.stringify(role)} `,
             });
           } catch (error) {
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
           try {
             await AuditLog.create({
               table_name: "Roles",
-              task: "Role deleted",
+              task: "deleted",
               description: `Delete process with data ${JSON.stringify(role)}`,
             });
           } catch (error) {

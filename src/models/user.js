@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
           try {
             await AuditLog.create({
               table_name: "Users",
-              task: "User insert",
+              task: "insert",
               description: `Insert process with data ${JSON.stringify(user)}`,
             });
           } catch (error) {
@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           try {
             await AuditLog.create({
               table_name: "Users",
-              task: "User updated",
+              task: "updated",
               description: `Update process with data ${JSON.stringify(user)}`,
             });
           } catch (error) {
@@ -65,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
           try {
             await AuditLog.create({
               table_name: "Users",
-              task: "User deleted",
+              task: "deleted",
               description: `Delete process with data ${JSON.stringify(user)}`,
             });
           } catch (error) {
