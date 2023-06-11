@@ -45,7 +45,10 @@ const FindOneOrder = async (req, res) => {
 };
 const CreateOrder = async (req, res) => {
   try {
-    const { user_id, order_weight, order_status, service_id } = req.body;
+    const { order_weight, order_status, service_id } = req.body;
+
+    const user_id = res.locals.user.user_id;
+    console.log(user_id);
 
     const order = await Order.create({
       user_id,

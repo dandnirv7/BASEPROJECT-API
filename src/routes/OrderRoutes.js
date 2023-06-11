@@ -12,7 +12,7 @@ const { VerifyToken, BasicUser } = require("../middleware/VerifyToken");
 
 router.get("/", VerifyToken, BasicUser, FindAllOrder);
 router.get("/:id", VerifyToken, BasicUser, FindOneOrder);
-router.post("/", VerifyToken, BasicUser, CreateOrder);
+router.post("/", VerifyToken, CreateOrder, BasicUser);
 router.put("/:id", VerifyToken, BasicUser, UpdateOrder);
 router.patch("/:id", VerifyToken, BasicUser, PatchOrder);
 router.delete("/:id", VerifyToken, BasicUser, DeleteOrder);

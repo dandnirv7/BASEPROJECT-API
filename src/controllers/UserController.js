@@ -80,6 +80,7 @@ const SignIn = async (req, res) => {
     }
 
     const dataUser = {
+      user_id: user.user_id,
       role_id: user.role_id,
       username: user.username,
       email: user.email,
@@ -98,6 +99,7 @@ const SignIn = async (req, res) => {
     });
 
     const responseUser = {
+      user_id: user.id,
       role_id: user.role_id,
       username: user.username,
       email: user.email,

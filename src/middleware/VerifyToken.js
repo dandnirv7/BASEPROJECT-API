@@ -19,8 +19,10 @@ const VerifyToken = (req, res, next) => {
       });
     }
 
-    res.locals.role_id = result.role_id;
-    res.locals.user_id = result.user_id;
+    res.locals.user = {
+      role_id: result.role_id,
+      user_id: result.user_id,
+    };
 
     next();
   } catch (err) {
@@ -34,7 +36,7 @@ const VerifyToken = (req, res, next) => {
 
 const SuperUser = (req, res, next) => {
   try {
-    const role_id = res.locals.role_id;
+    const { role_id } = res.locals.user;
 
     if (role_id !== 1) {
       return res.status(403).send({
@@ -55,7 +57,7 @@ const SuperUser = (req, res, next) => {
 };
 const Admin = (req, res, next) => {
   try {
-    const role_id = res.locals.role_id;
+    const { role_id } = res.locals.user;
 
     if (role_id !== 2) {
       return res.status(403).send({
@@ -76,8 +78,7 @@ const Admin = (req, res, next) => {
 };
 const BasicUser = async (req, res, next) => {
   try {
-    const role_id = res.locals.role_id;
-    const user_id = res.locals.user_id;
+    const { role_id } = res.locals.user;
 
     if (role_id !== 3) {
       return res.status(403).send({
